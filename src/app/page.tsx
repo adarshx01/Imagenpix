@@ -4,7 +4,7 @@ import React from 'react'
 const Home = () => {
   return (
     <div>
-      <div>ABHINAV KAshyap</div>
+      <div>ABHINAV KASHYAP</div>
       <LandingPage/>
 
     </div>
