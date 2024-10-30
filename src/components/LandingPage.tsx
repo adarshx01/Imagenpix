@@ -1,522 +1,532 @@
-'use client'
-import { useState, useEffect, useRef } from 'react'
-import { motion, useAnimation, useInView } from 'framer-motion'
-import { ChevronDown, Code, Image, Layers, Palette, Zap, DollarSign, Star, Users, ArrowRight, Menu, X, ChevronLeft, ChevronRight } from 'lucide-react'
-import { Button } from "@/components/ui/button"
+"use client"
 
+import * as React from "react"
+import Link from "next/link"
+import Image from "next/image"
+import { Moon, Sun, Search, ChevronDown, ImageIcon, FileIcon, CodeIcon, LayoutIcon, Box, Layers, Monitor, ShoppingCart, Filter, Star, Users, Download, Clock, DollarSign, Zap, Shield, Gift, TrendingUp, Award, Play, Pause, ChevronRight, ChevronLeft, CheckCheck } from "lucide-react"
+// import { useTheme } from "next-themes"
+import { motion, AnimatePresence } from "framer-motion"
+
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Badge } from "@/components/ui/badge"
+import { Slider } from "@/components/ui/slider"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
+import { Progress } from "@/components/ui/progress"
+
+const MotionLink = motion(Link)
 
 export default function LandingPage() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const controls = useAnimation()
-  const [currentTheme, setCurrentTheme] = useState(0)
+  // const { setTheme, theme } = useTheme()
+  const [searchQuery, setSearchQuery] = React.useState("")
+  const [priceRange, setPriceRange] = React.useState([0, 100])
+  const [activeCategory, setActiveCategory] = React.useState("all")
+  const [isVideoPlaying, setIsVideoPlaying] = React.useState(false)
+  const [currentTestimonial, setCurrentTestimonial] = React.useState(0)
 
-  const themes = [
-    { image: "/placeholder.svg?height=400&width=600", title: "Modern Portfolio", price: "19.99" },
-    { image: "/placeholder.svg?height=400&width=600", title: "E-commerce Deluxe", price: "24.99" },
-    { image: "/placeholder.svg?height=400&width=600", title: "Blog Master", price: "14.99" },
-    { image: "/placeholder.svg?height=400&width=600", title: "Agency Pro", price: "29.99" },
+  const productCategories = [
+    { name: "Images", icon: ImageIcon },
+    { name: "Icons", icon: FileIcon },
+    { name: "UI Components", icon: Layers },
+    { name: "WordPress Themes", icon: Monitor },
+    { name: "Vector Graphics", icon: CodeIcon },
+    { name: "Website Templates", icon: LayoutIcon },
   ]
 
-  useEffect(() => {
-    controls.start(i => ({
-      opacity: 1,
-      y: 0,
-      transition: { delay: i * 0.1 }
-    }))
-  }, [controls])
+  const featuredProducts = [
+    { name: "Modern Dashboard UI Kit", category: "UI Components", price: 49, image: "/placeholder.svg?height=200&width=300", downloads: 1200, rating: 4.8 },
+    { name: "E-commerce WordPress Theme", category: "WordPress Themes", price: 79, image: "/placeholder.svg?height=200&width=300", downloads: 850, rating: 4.9 },
+    { name: "Tech Icon Pack", category: "Icons", price: 19, image: "/placeholder.svg?height=200&width=300", downloads: 3000, rating: 4.7 },
+    { name: "Abstract Background Pack", category: "Images", price: 29, image: "/placeholder.svg?height=200&width=300", downloads: 1500, rating: 4.6 },
+    { name: "Startup Landing Page", category: "Website Templates", price: 39, image: "/placeholder.svg?height=200&width=300", downloads: 720, rating: 4.8 },
+    { name: "Business Infographic Set", category: "Vector Graphics", price: 24, image: "/placeholder.svg?height=200&width=300", downloads: 2100, rating: 4.5 },
+    { name: "Social Media UI Kit", category: "UI Components", price: 34, image: "/placeholder.svg?height=200&width=300", downloads: 980, rating: 4.7 },
+    { name: "Nature Photography Pack", category: "Images", price: 45, image: "/placeholder.svg?height=200&width=300", downloads: 650, rating: 4.9 },
+    { name: "Minimalist Logo Pack", category: "Vector Graphics", price: 29, image: "/placeholder.svg?height=200&width=300", downloads: 1800, rating: 4.6 },
+  ]
+
+  const customerReviews = [
+    { name: "Alex Johnson", avatar: "/placeholder.svg?height=40&width=40", rating: 5, comment: "StratifyLabs has revolutionized my design workflow. The quality and variety of AI-generated assets are unmatched!", company: "Creative Director, DesignCo" },
+    { name: "Sarah Lee", avatar: "/placeholder.svg?height=40&width=40", rating: 4, comment: "As a freelance designer, StratifyLabs has become my go-to resource. It saves me so much time and the prices are unbeatable.", company: "Freelance UI/UX Designer" },
+    { name: "Michael Chen", avatar: "/placeholder.svg?height=40&width=40", rating: 5, comment: "The WordPress themes from StratifyLabs are top-notch. My clients are always impressed with the results!", company: "Web Developer, TechSolutions" },
+    { name: "Emily Rodriguez", avatar: "/placeholder.svg?height=40&width=40", rating: 5, comment: "I'm amazed by the quality of the AI-generated images. They're perfect for my digital marketing campaigns.", company: "Marketing Manager, BrandBoost" },
+    { name: "David Kim", avatar: "/placeholder.svg?height=40&width=40", rating: 4, comment: "StratifyLabs offers an incredible range of assets. It's like having a whole design team at my fingertips.", company: "Product Designer, InnovateTech" },
+  ]
+
+  const pricingPlans = [
+    { name: "Basic", price: 29, features: ["100 AI-generated assets/month", "5 WordPress themes", "Basic support", "Commercial license"] },
+    { name: "Pro", price: 79, features: ["Unlimited AI-generated assets", "20 WordPress themes", "Priority support", "Commercial license", "API access"] },
+    { name: "Enterprise", price: 199, features: ["Unlimited AI-generated assets", "Unlimited WordPress themes", "24/7 Premium support", "Commercial license", "API access", "Custom AI model training"] },
+  ]
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans overflow-hidden">
-      <ParallaxBackground />
-      <header className="fixed top-0 left-0 right-0 z-50 bg-black bg-opacity-50 backdrop-blur-md">
-        <nav className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <a href="#" className="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">StratifyLabs</a>
-            <div className="hidden md:flex space-x-8">
-              <NavLink href="#themes">Themes</NavLink>
-              <NavLink href="#features">Features</NavLink>
-              <NavLink href="#pricing">Pricing</NavLink>
-              <NavLink href="#testimonials">Testimonials</NavLink>
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-16 items-center">
+          <MotionLink 
+            className="flex items-center gap-2 font-bold text-2xl" 
+            href="#"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Zap className="h-6 w-6 text-primary" />
+            <span>StratifyLabs</span>
+          </MotionLink>
+          <NavigationMenu className="hidden md:flex mx-6">
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="grid gap-3 p-6 w-[400px] md:w-[500px] lg:w-[600px] lg:grid-cols-2">
+                    {productCategories.map((category) => (
+                      <MotionLink 
+                        key={category.name} 
+                        className="group grid h-auto items-center gap-1 rounded-md p-3 hover:bg-accent" 
+                        href="#"
+                        onClick={() => setActiveCategory(category.name.toLowerCase())}
+                        whileHover={{ backgroundColor: "var(--accent)", scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <category.icon className="h-5 w-5 text-primary" />
+                          <div className="text-sm font-medium leading-none group-hover:underline">{category.name}</div>
+                        </div>
+                      </MotionLink>
+                    ))}
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link href="#features" legacyBehavior passHref>
+                  <NavigationMenuLink className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
+                    Features
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link href="#pricing" legacyBehavior passHref>
+                  <NavigationMenuLink className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
+                    Pricing
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link href="#testimonials" legacyBehavior passHref>
+                  <NavigationMenuLink className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
+                    Testimonials
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+          <div className="flex items-center ml-auto gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="mr-2"
+              onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+            >
+              <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <span className="sr-only">Toggle theme</span>
+            </Button>
+            <Button variant="ghost" size="icon">
+              <ShoppingCart className="h-5 w-5" />
+              <span className="sr-only">Shopping cart</span>
+            </Button>
+            <Button>Sign In</Button>
+          </div>
+        </div>
+      </header>
+      <main className="flex-1">
+        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-accent">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center space-y-4 text-center">
+              <div className="space-y-2">
+                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
+                  Unleash Your Creativity with AI-Powered Design
+                </h1>
+                <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+                  Discover a vast collection of AI-generated assets, from stunning visuals to powerful WordPress themes, all at unbeatable prices.
+                </p>
+              </div>
+              <div className="w-full max-w-sm space-y-2">
+                <form className="flex space-x-2">
+                  <Input
+                    className="flex-1"
+                    placeholder="Search for assets..."
+                    type="search"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  <Button type="submit">Search</Button>
+                </form>
+              </div>
+              <div className="flex flex-wrap justify-center gap-4">
+                <Button size="lg">Explore Assets</Button>
+                <Button size="lg" variant="outline">
+                  How It Works
+                </Button>
+              </div>
             </div>
-            <div className="hidden md:block">
-              <Button variant="outline" className="bg-transparent border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white transition-all duration-300 transform hover:scale-105">
-                Start Selling
+          </div>
+        </section>
+        <section className="w-full py-12 md:py-24 lg:py-32">
+          <div className="container px-4 md:px-6">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8 text-center">Featured Products</h2>
+            <Tabs defaultValue={activeCategory} className="w-full" onValueChange={setActiveCategory}>
+              <TabsList className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7 mb-8">
+                <TabsTrigger value="all">All</TabsTrigger>
+                {productCategories.map((category) => (
+                  <TabsTrigger key={category.name} value={category.name.toLowerCase()}>
+                    {category.name}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+              <TabsContent value={activeCategory} className="mt-4">
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {featuredProducts
+                    .filter((product) => activeCategory === "all" || product.category.toLowerCase() === activeCategory)
+                    .map((product, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                      >
+                        <Card  className="overflow-hidden h-full flex flex-col">
+                          <CardHeader className="p-0">
+                            <Image
+                              src={product.image}
+                              alt={product.name}
+                              width={300}
+                              height={200}
+                              className="w-full h-[200px] object-cover"
+                            />
+                          </CardHeader>
+                          <CardContent className="p-4 flex-grow">
+                            <CardTitle>{product.name}</CardTitle>
+                            <CardDescription>{product.category}</CardDescription>
+                            <div className="flex items-center mt-2">
+                              <Star className="w-4 h-4 fill-primary text-primary mr-1" />
+                              <span>{product.rating.toFixed(1)}</span>
+                              <span className="mx-2">•</span>
+                              <Download className="w-4 h-4 mr-1" />
+                              <span>{product.downloads.toLocaleString()}</span>
+                            </div>
+                          </CardContent>
+                          <CardFooter className="p-4 flex items-center justify-between">
+                            <span className="text-lg font-bold">${product.price}</span>
+                            <Button>Add to Cart</Button>
+                          </CardFooter>
+                        </Card>
+                      </motion.div>
+                    ))}
+                </div>
+              </TabsContent>
+            </Tabs>
+            <div className="mt-12 text-center">
+              <Button size="lg">View All Products</Button>
+            </div>
+          </div>
+        </section>
+        <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-accent">
+          <div className="container px-4 md:px-6">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-12 text-center">Why Choose StratifyLabs?</h2>
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              <Card>
+                <CardHeader>
+                  <Zap className="w-10 h-10 mb-2 text-primary" />
+                  <CardTitle>AI-Powered Innovation</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>Our cutting-edge AI technology creates unique, high-quality assets that push the boundaries of design.</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <DollarSign className="w-10 h-10 mb-2 text-primary" />
+                  <CardTitle>Unbeatable Value</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>Get premium design assets at a fraction of the cost of traditional marketplaces, without compromising on quality.</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <Layers className="w-10 h-10 mb-2 text-primary" />
+                  <CardTitle>Vast Selection</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>From images to WordPress themes, we offer a wide range of AI-generated assets to suit all your design needs.</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <Clock className="w-10 h-10 mb-2 text-primary" />
+                  <CardTitle>Time-Saving</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>Our AI-generated assets are ready to use, saving you countless hours in the design process.</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <Shield className="w-10 h-10 mb-2 text-primary" />
+                  <CardTitle>Quality Assured</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>Every asset is reviewed by our team of expert designers to ensure the highest quality standards.</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <Gift className="w-10 h-10 mb-2 text-primary" />
+                  <CardTitle>Regular Updates</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>We continuously update our collection with fresh, trendy designs to keep your projects cutting-edge.</p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+        <section className="w-full py-12 md:py-24 lg:py-32">
+          <div className="container px-4 md:px-6">
+            <div className="grid gap-6 lg:grid-cols-[1fr_400px] items-center">
+              <div className="space-y-4">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">See StratifyLabs in Action</h2>
+                <p className="text-muted-foreground text-lg">
+                  Watch how our AI-powered platform revolutionizes the design process, saving you time and boosting creativity.
+                </p>
+              </div>
+              <Card className="relative overflow-hidden">
+                <Image
+                  src="/placeholder.svg?height=300&width=400"
+                  alt="StratifyLabs Demo Video"
+                  width={400}
+                  height={300}
+                  className="w-full h-[300px] object-cover"
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Button
+                    size="lg"
+                    className="rounded-full"
+                    onClick={() => setIsVideoPlaying(!isVideoPlaying)}
+                  >
+                    {isVideoPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
+                  </Button>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </section>
+        <section id="testimonials" className="w-full py-12 md:py-24 lg:py-32 bg-accent">
+          <div className="container px-4 md:px-6">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-12 text-center">What Our Customers Say</h2>
+            <div className="relative">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentTestimonial}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card className="max-w-2xl mx-auto">
+                    <CardHeader>
+                      <div className="flex items-center gap-4">
+                        <Avatar>
+                          <AvatarImage src={customerReviews[currentTestimonial].avatar} alt={customerReviews[currentTestimonial].name} />
+                          <AvatarFallback>{customerReviews[currentTestimonial].name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <CardTitle>{customerReviews[currentTestimonial].name}</CardTitle>
+                          <CardDescription>{customerReviews[currentTestimonial].company}</CardDescription>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-lg italic">"{customerReviews[currentTestimonial].comment}"</p>
+                    </CardContent>
+                    <CardFooter>
+                      <div className="flex items-center">
+                        {[...Array(customerReviews[currentTestimonial].rating)].map((_, i) => (
+                          <Star key={i} className="w-5 h-5 fill-primary text-primary" />
+                        ))}
+                      </div>
+                    </CardFooter>
+                  </Card>
+                </motion.div>
+              </AnimatePresence>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute top-1/2 left-0 -translate-y-1/2"
+                onClick={() => setCurrentTestimonial((prev) => (prev === 0 ? customerReviews.length - 1 : prev - 1))}
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute top-1/2 right-0 -translate-y-1/2"
+                onClick={() => setCurrentTestimonial((prev) => (prev === customerReviews.length - 1 ? 0 : prev + 1))}
+              >
+                <ChevronRight className="h-6 w-6" />
               </Button>
             </div>
-            <button 
-              className="md:hidden text-white"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? <X /> : <Menu />}
-            </button>
           </div>
-        </nav>
-      </header>
-
-      {isMenuOpen && (
-        <motion.div 
-          className="fixed inset-0 z-40 bg-black bg-opacity-90 backdrop-blur-md flex flex-col items-center justify-center space-y-8"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.9 }}
-          transition={{ duration: 0.3 }}
-        >
-          <NavLink href="#themes" onClick={() => setIsMenuOpen(false)}>Themes</NavLink>
-          <NavLink href="#features" onClick={() => setIsMenuOpen(false)}>Features</NavLink>
-          <NavLink href="#pricing" onClick={() => setIsMenuOpen(false)}>Pricing</NavLink>
-          <NavLink href="#testimonials" onClick={() => setIsMenuOpen(false)}>Testimonials</NavLink>
-          <Button variant="outline" className="bg-transparent border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white transition-all duration-300 transform hover:scale-105">
-            Start Selling
-          </Button>
-        </motion.div>
-      )}
-
-      <main className="pt-20">
-        <section className="container mx-auto px-4 py-20 text-center relative overflow-hidden">
-          <motion.h1 
-            className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            Premium Themes<br />at Unbeatable Prices
-          </motion.h1>
-          <motion.p 
-            className="text-xl md:text-2xl mb-10 max-w-3xl mx-auto text-gray-300"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            Discover a vast collection of high-quality, AI-generated themes and templates. Perfect for web developers, designers, and businesses on a budget.
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="space-x-4"
-          >
-            <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-              Explore Themes
-            </Button>
-            <Button size="lg" variant="outline" className="bg-transparent border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-              Sell Your Themes
-            </Button>
-          </motion.div>
-          <FloatingShapes />
         </section>
-
-        <section id="themes" className="py-20 bg-gray-900 relative overflow-hidden">
-          <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold mb-12 text-center">Featured Themes</h2>
-            <div className="relative">
-              <div className="flex overflow-hidden">
-                <motion.div 
-                  className="flex"
-                  animate={{ x: `${-currentTheme * 100}%` }}
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                >
-                  {themes.map((theme, index) => (
-                    <div key={index} className="w-full flex-shrink-0 px-4">
-                      <ThemeCard {...theme} />
-                    </div>
-                  ))}
-                </motion.div>
+        <section id="pricing" className="w-full py-12 md:py-24 lg:py-32">
+          <div className="container px-4 md:px-6">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-12 text-center">Choose Your Plan</h2>
+            <div className="grid gap-8 md:grid-cols-3">
+              {pricingPlans.map((plan, index) => (
+                <Card key={index} className={index === 1 ? "border-primary" : ""}>
+                  <CardHeader>
+                    <CardTitle className="text-2xl">{plan.name}</CardTitle>
+                    <CardDescription>
+                      <span className="text-4xl font-bold">${plan.price}</span> / month
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2">
+                      {plan.features.map((feature, i) => (
+                        <li key={i} className="flex items-center">
+                          <CheckCheck className="w-5 h-5 mr-2 text-primary" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                  <CardFooter>
+                    <Button className="w-full">{index === 1 ? "Start Pro Trial" : "Get Started"}</Button>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-accent">
+          <div className="container px-4 md:px-6">
+            <div className="grid gap-6 lg:grid-cols-[1fr_400px] items-center">
+              <div className="space-y-4">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Join Our Creative Community</h2>
+                <p className="text-muted-foreground text-lg">
+                  Get exclusive access to new assets, special offers, and connect with fellow designers.
+                </p>
               </div>
-              <button 
-                className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 transition-all duration-300"
-                onClick={() => setCurrentTheme(prev => (prev - 1 + themes.length) % themes.length)}
-              >
-                <ChevronLeft className="w-6 h-6" />
-              </button>
-              <button 
-                className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 transition-all duration-300"
-                onClick={() => setCurrentTheme(prev => (prev + 1) % themes.length)}
-              >
-                <ChevronRight className="w-6 h-6" />
-              </button>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Subscribe to Our Newsletter</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form className="space-y-4">
+                    <Input placeholder="Enter your email" type="email" />
+                    <Button className="w-full">Subscribe</Button>
+                  </form>
+                </CardContent>
+              </Card>
             </div>
           </div>
-          <GlowingOrb className="absolute top-1/2 left-0 transform -translate-y-1/2" />
-          <GlowingOrb className="absolute top-1/2 right-0 transform -translate-y-1/2" />
         </section>
-
-        <section id="features" className="py-20 bg-black relative">
-          <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold mb-12 text-center">Why Choose Our Marketplace</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <FeatureCard 
-                icon={<DollarSign className="w-12 h-12 mb-4 text-purple-400" />}
-                title="Unbeatable Prices"
-                description="Get premium quality themes at a fraction of the cost. Our AI-powered generation keeps prices low without compromising on quality."
-              />
-              <FeatureCard 
-                icon={<Zap className="w-12 h-12 mb-4 text-purple-400" />}
-                title="Instant Download"
-                description="No waiting! Download your chosen theme immediately after purchase and start building your website right away."
-              />
-              <FeatureCard 
-                icon={<Layers className="w-12 h-12 mb-4 text-purple-400" />}
-                title="Wide Variety"
-                description="From portfolios to e-commerce, find the perfect theme for any project. New themes added daily!"
-              />
-              <FeatureCard 
-                icon={<Code className="w-12 h-12 mb-4 text-purple-400" />}
-                title="Clean Code"
-                description="All our themes feature well-structured, commented code for easy customization and optimal performance."
-              />
-              <FeatureCard 
-                icon={<Palette className="w-12 h-12 mb-4 text-purple-400" />}
-                title="Customizable Designs"
-                description="Easily adapt themes to your brand with intuitive customization options and detailed documentation."
-              />
-              <FeatureCard 
-                icon={<Users className="w-12 h-12 mb-4 text-purple-400" />}
-                title="Community Support"
-                description="Join our vibrant community of developers and designers. Get help, share tips, and grow together."
-              />
+        <section className="w-full py-12 md:py-24 lg:py-32">
+          <div className="container px-4 md:px-6">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-12 text-center">Frequently Asked Questions</h2>
+            <Accordion type="single" collapsible className="w-full max-w-3xl mx-auto">
+              <AccordionItem value="item-1">
+                <AccordionTrigger>How does AI generate the assets?</AccordionTrigger>
+                <AccordionContent>
+                  Our advanced AI algorithms analyze millions of design elements and trends to create unique, high-quality assets. Each asset is then reviewed by our expert design team to ensure it meets our quality standards.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-2">
+                <AccordionTrigger>Can I use the assets for commercial projects?</AccordionTrigger>
+                <AccordionContent>
+                  Yes, all assets on StratifyLabs come with a commercial license. You can use them in both personal and commercial projects without attribution.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-3">
+                <AccordionTrigger>How often are new assets added?</AccordionTrigger>
+                <AccordionContent>
+                  We add new AI-generated assets to our collection daily. Our AI is constantly learning and improving, allowing us to offer fresh, trendy designs regularly.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-4">
+                <AccordionTrigger>Do you offer refunds?</AccordionTrigger>
+                <AccordionContent>
+                  We offer a 30-day money-back guarantee on all purchases. If you're not satisfied with the quality of an asset, please contact our support team for a full refund.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+        </section>
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-primary text-primary-foreground">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                  Ready to Elevate Your Design Game?
+                </h2>
+                <p className="mx-auto max-w-[700px] text-primary-foreground/80 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Join StratifyLabs today and unlock a world of AI-powered creative possibilities.
+                </p>
+              </div>
+              <div className="flex flex-col gap-2 min-[400px]:flex-row">
+                <Button size="lg" variant="secondary">Get Started</Button>
+                <Button size="lg" variant="outline">
+                  View Pricing
+                </Button>
+              </div>
             </div>
           </div>
-          <HexagonBackground />
-        </section>
-
-        <section id="pricing" className="py-20 bg-gray-900 relative overflow-hidden">
-          <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold mb-12 text-center">Seller Plans</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <PricingCard
-                title="Basic"
-                price="Free"
-                features={[
-                  "List up to 5 themes",
-                  "Standard support",
-                  "70% revenue share",
-                  "Monthly payouts"
-                ]}
-              />
-              <PricingCard
-                title="Pro"
-                price="$19.99"
-                features={[
-                  "Unlimited theme listings",
-                  "Priority support",
-                  "80% revenue share",
-                  "Bi-weekly payouts",
-                  "Featured theme placement"
-                ]}
-                highlighted={true}
-              />
-              <PricingCard
-                title="Enterprise"
-                price="Custom"
-                features={[
-                  "Unlimited theme listings",
-                  "Dedicated account manager",
-                  "Custom revenue share",
-                  "Weekly payouts",
-                  "Custom branding options",
-                  "API access"
-                ]}
-              />
-            </div>
-          </div>
-          <GlowingOrb className="absolute bottom-0 left-1/4 transform translate-y-1/2" />
-          <GlowingOrb className="absolute top-0 right-1/4 transform -translate-y-1/2" />
-        </section>
-
-        <section id="testimonials" className="py-20 bg-black relative">
-          <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold mb-12 text-center">What Our Users Say</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <TestimonialCard
-                quote="I've tripled my income since I started selling on ThemeMarket. The low barrier to entry and high-quality AI-generated themes make it a win-win!"
-                author="Alex Chen"
-                role="Theme Developer"
-              />
-              <TestimonialCard
-                quote="As a small business owner, I found the perfect e-commerce theme at an unbeatable price. It saved me thousands in custom development costs."
-                author="Sarah Thompson"
-                role="Boutique Owner"
-              />
-              <TestimonialCard
-                quote="The variety and quality of themes available is impressive. I always find what I need for my clients' projects, and at great prices too!"
-                author="Michael Rodriguez"
-                role="Web Designer"
-              />
-            </div>
-          </div>
-          <ParticleBackground />
-        </section>
-
-        <section className="container mx-auto px-4 py-20 text-center relative overflow-hidden">
-          <h2 className="text-4xl font-bold mb-6">Ready to Start?</h2>
-          <p className="text-xl mb-10 max-w-2xl mx-auto text-gray-300">
-            Join our community of theme creators and buyers. Start selling or find the perfect theme for your next project today!
-          </p>
-          <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            Get Started Now <ArrowRight className="ml-2" />
-          </Button>
-          <FloatingShapes />
         </section>
       </main>
-
-      <footer className="bg-gray-900 py-12 border-t border-gray-800 relative overflow-hidden">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <h3 className="text-lg font-semibold mb-4">About Us</h3>
-              <p className="text-gray-400">ThemeMarket is the leading marketplace for high-quality, affordable website themes and templates.</p>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">Home</a></li>
-                <li><a href="#themes" className="text-gray-400 hover:text-white transition-colors duration-300">Themes</a></li>
-                <li><a href="#features" className="text-gray-400 hover:text-white transition-colors duration-300">Features</a></li>
-                <li><a href="#pricing" className="text-gray-400 hover:text-white transition-colors duration-300">Pricing</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Support</h3>
-              <ul className="space-y-2">
-                
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">FAQ</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">Documentation</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">Contact Us</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Connect</h3>
-              <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path></svg>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd"></path></svg>
-                </a>
-              </div>
-            </div>
+      <footer className="w-full border-t py-6 md:py-0">
+        <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+          <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+            <Zap className="h-6 w-6 text-primary" />
+            <p className="text-center text-sm leading-loose md:text-left">
+              © 2024 StratifyLabs. All rights reserved.
+            </p>
           </div>
-          <div className="mt-8 pt-8 border-t border-gray-800 text-center">
-            <p className="text-gray-400">&copy; 2023 ThemeMarket. All rights reserved.</p>
+          <div className="flex gap-4">
+            <Link className="text-sm underline-offset-4 hover:underline" href="#">
+              Terms of Service
+            </Link>
+            <Link className="text-sm underline-offset-4 hover:underline" href="#">
+              Privacy Policy
+            </Link>
+            <Link className="text-sm underline-offset-4 hover:underline" href="#">
+              Contact Us
+            </Link>
           </div>
         </div>
-        <GlowingOrb className="absolute bottom-0 left-0 transform translate-y-1/2" />
-        <GlowingOrb className="absolute top-0 right-0 transform -translate-y-1/2" />
       </footer>
     </div>
-  )
-}
-
-function NavLink({ href, children, ...props }) {
-  return (
-    <a href={href} className="text-gray-300 hover:text-white transition-colors duration-300 relative group" {...props}>
-      {children}
-      <span className="absolute left-0 right-0 bottom-0 h-0.5 bg-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
-    </a>
-  )
-}
-
-function ThemeCard({ image, title, price }) {
-  return (
-    <motion.div 
-      className="bg-gray-800 rounded-lg overflow-hidden shadow-lg group"
-      whileHover={{ scale: 1.05 }}
-      transition={{ type: "spring", stiffness: 300 }}
-    >
-      <div className="relative overflow-hidden">
-        <img src={image} alt={title} className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110" />
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white hover:text-black transition-colors duration-300">
-            View Theme
-          </Button>
-        </div>
-      </div>
-      <div className="p-6">
-        <h3 className="text-xl font-semibold mb-2">{title}</h3>
-        <div className="flex justify-between items-center">
-          <span className="text-2xl font-bold text-purple-400">${price}</span>
-          <Star className="w-6 h-6 text-yellow-400" />
-        </div>
-      </div>
-    </motion.div>
-  )
-}
-
-function FeatureCard({ icon, title, description }) {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true })
-
-  return (
-    <motion.div 
-      ref={ref}
-      className="bg-gray-900 p-6 rounded-lg shadow-lg border border-gray-800 group hover:border-purple-500 transition-colors duration-300"
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-      transition={{ duration: 0.5 }}
-    >
-      <motion.div
-        initial={{ scale: 1 }}
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 5 }}
-      >
-        {icon}
-      </motion.div>
-      <h3 className="text-xl font-semibold mb-2 text-purple-400 group-hover:text-purple-300 transition-colors duration-300">{title}</h3>
-      <p className="text-gray-300 group-hover:text-white transition-colors duration-300">{description}</p>
-    </motion.div>
-  )
-}
-
-function PricingCard({ title, price, features, highlighted = false }) {
-  return (
-    <motion.div 
-      className={`p-6 rounded-lg shadow-lg ${highlighted ? 'bg-purple-600' : 'bg-gray-800'} ${highlighted ? 'border-2 border-white' : 'border border-gray-700'} relative overflow-hidden group`}
-      whileHover={{ scale: 1.05 }}
-      transition={{ type: "spring", stiffness: 300 }}
-    >
-      {highlighted && (
-        <div className="absolute top-0 right-0 bg-yellow-400 text-black font-bold py-1 px-4 transform rotate-45 translate-x-8 -translate-y-3">
-          Popular
-        </div>
-      )}
-      <h3 className="text-2xl font-bold mb-4">{title}</h3>
-      <p className="text-4xl font-bold mb-6">{price}<span className="text-xl font-normal">{price !== "Custom" && "/month"}</span></p>
-      <ul className="mb-8 space-y-2">
-        {features.map((feature, index) => (
-          <li key={index} className="flex items-center">
-            <Check className="w-5 h-5 mr-2 text-green-400" />
-            {feature}
-          </li>
-        ))}
-      </ul>
-      <Button className={`w-full ${highlighted ? 'bg-white text-purple-600' : 'bg-purple-600 text-white'} hover:opacity-90 transition-all duration-300 transform group-hover:scale-105`}>
-        Choose Plan
-      </Button>
-    </motion.div>
-  )
-}
-
-function TestimonialCard({ quote, author, role }) {
-  return (
-    <motion.div 
-      className="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 group hover:border-purple-500 transition-all duration-300"
-      whileHover={{ scale: 1.05 }}
-      transition={{ type: "spring", stiffness: 300 }}
-    >
-      <p className="mb-4 italic text-gray-300 group-hover:text-white transition-colors duration-300">"{quote}"</p>
-      <p className="font-semibold text-purple-400 group-hover:text-purple-300 transition-colors duration-300">{author}</p>
-      <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors duration-300">{role}</p>
-    </motion.div>
-  )
-}
-
-function ParallaxBackground() {
-  return (
-    <div className="fixed inset-0 z-0">
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-black to-gray-900 opacity-50"></div>
-      <div className="absolute inset-0 bg-[url('/placeholder.svg?height=1080&width=1920')] bg-cover bg-center opacity-10"></div>
-    </div>
-  )
-}
-
-function FloatingShapes() {
-  return (
-    <div className="absolute inset-0 overflow-hidden">
-      {[...Array(20)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-4 h-4 bg-purple-500 rounded-full opacity-20"
-          initial={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
-          }}
-          animate={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
-          }}
-          transition={{
-            duration: Math.random() * 10 + 20,
-            repeat: Infinity,
-            repeatType: "reverse",
-          }}
-        />
-      ))}
-    </div>
-  )
-}
-
-function GlowingOrb({ className }) {
-  return (
-    <div className={`w-64 h-64 rounded-full bg-purple-600 filter blur-3xl opacity-20 ${className}`}></div>
-  )
-}
-
-function HexagonBackground() {
-  return (
-    <div className="absolute inset-0 overflow-hidden opacity-10">
-      {[...Array(20)].map((_, i) => (
-        <svg
-          key={i}
-          className="absolute"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            transform: `scale(${Math.random() * 0.5 + 0.5})`,
-          }}
-          width="24"
-          height="28"
-          viewBox="0 0 24 28"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M12 0L23.3205 6V18L12 24L0.679491 18V6L12 0Z" fill="currentColor" />
-        </svg>
-      ))}
-    </div>
-  )
-}
-
-function ParticleBackground() {
-  return (
-    <div className="absolute inset-0 overflow-hidden">
-      {[...Array(50)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 bg-white rounded-full"
-          initial={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
-            opacity: Math.random(),
-          }}
-          animate={{
-            y: [null, Math.random() * window.innerHeight],
-          }}
-          transition={{
-            duration: Math.random() * 10 + 10,
-            repeat: Infinity,
-            repeatType: "reverse",
-          }}
-        />
-      ))}
-    </div>
-  )
-}
-
-function Check(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
   )
 }
