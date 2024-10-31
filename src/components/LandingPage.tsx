@@ -1,10 +1,9 @@
 "use client"
-
-import * as React from "react"
+import React from "react"
+import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Moon, Sun, Search, ChevronDown, ImageIcon, FileIcon, CodeIcon, LayoutIcon, Box, Layers, Monitor, ShoppingCart, Filter, Star, Users, Download, Clock, DollarSign, Zap, Shield, Gift, TrendingUp, Award, Play, Pause, ChevronRight, ChevronLeft, CheckCheck } from "lucide-react"
-// import { useTheme } from "next-themes"
+import { Moon, Sun, Search, ChevronDown, ImageIcon, FileIcon, CodeIcon, LayoutIcon, Box, Layers, Monitor, ShoppingCart, Filter, Star, Users, Download, Clock, DollarSign, Zap, Shield, Gift, TrendingUp, Award, Play, Pause, ChevronRight, ChevronLeft, Check } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
 import { Button } from "@/components/ui/button"
@@ -39,13 +38,14 @@ import { Progress } from "@/components/ui/progress"
 
 const MotionLink = motion(Link)
 
-export default function LandingPage() {
-  // const { setTheme, theme } = useTheme()
-  const [searchQuery, setSearchQuery] = React.useState("")
-  const [priceRange, setPriceRange] = React.useState([0, 100])
-  const [activeCategory, setActiveCategory] = React.useState("all")
-  const [isVideoPlaying, setIsVideoPlaying] = React.useState(false)
-  const [currentTestimonial, setCurrentTestimonial] = React.useState(0)
+export default function StratifyLabsLandingPage() {
+  const [theme,setTheme ] =useState("white")
+  console.log(theme);
+  const [searchQuery, setSearchQuery] = useState("")
+  const [priceRange, setPriceRange] = useState([0, 100])
+  const [activeCategory, setActiveCategory] = useState("all")
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
+  const [currentTestimonial, setCurrentTestimonial] = useState(0)
 
   const productCategories = [
     { name: "Images", icon: ImageIcon },
@@ -83,7 +83,7 @@ export default function LandingPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center">
           <MotionLink 
@@ -147,10 +147,10 @@ export default function LandingPage() {
               variant="ghost"
               size="icon"
               className="mr-2"
-              onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+              onClick={() => setTheme(theme === "black" ? "white" : "black")}
             >
-              <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-yellow-500" />
+              <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-blue-500" />
               <span className="sr-only">Toggle theme</span>
             </Button>
             <Button variant="ghost" size="icon">
@@ -162,11 +162,11 @@ export default function LandingPage() {
         </div>
       </header>
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-accent">
+        <section className={`w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-${theme} dark:bg-gray-800`}>
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
+                <h1 className={`text-3xl ${theme==='black'?'text-white':'text-black'} font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none`}>
                   Unleash Your Creativity with AI-Powered Design
                 </h1>
                 <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
@@ -198,10 +198,10 @@ export default function LandingPage() {
           <div className="container px-4 md:px-6">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8 text-center">Featured Products</h2>
             <Tabs defaultValue={activeCategory} className="w-full" onValueChange={setActiveCategory}>
-              <TabsList className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7 mb-8">
-                <TabsTrigger value="all">All</TabsTrigger>
+              <TabsList className="flex flex-wrap justify-start gap-2 mb-8">
+                <TabsTrigger value="all" className="px-3 py-1 text-sm">All</TabsTrigger>
                 {productCategories.map((category) => (
-                  <TabsTrigger key={category.name} value={category.name.toLowerCase()}>
+                  <TabsTrigger key={category.name} value={category.name.toLowerCase()} className="px-3 py-1 text-sm">
                     {category.name}
                   </TabsTrigger>
                 ))}
@@ -222,6 +222,7 @@ export default function LandingPage() {
                             <Image
                               src={product.image}
                               alt={product.name}
+                              
                               width={300}
                               height={200}
                               className="w-full h-[200px] object-cover"
@@ -253,7 +254,7 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-        <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-accent">
+        <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
           <div className="container px-4 md:px-6">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-12 text-center">Why Choose StratifyLabs?</h2>
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -344,7 +345,7 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-        <section id="testimonials" className="w-full py-12 md:py-24 lg:py-32 bg-accent">
+        <section id="testimonials" className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
           <div className="container px-4 md:px-6">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-12 text-center">What Our Customers Say</h2>
             <div className="relative">
@@ -417,7 +418,7 @@ export default function LandingPage() {
                     <ul className="space-y-2">
                       {plan.features.map((feature, i) => (
                         <li key={i} className="flex items-center">
-                          <CheckCheck className="w-5 h-5 mr-2 text-primary" />
+                          <Check className="w-5 h-5 mr-2 text-primary" />
                           {feature}
                         </li>
                       ))}
@@ -431,7 +432,7 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-accent">
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] items-center">
               <div className="space-y-4">
